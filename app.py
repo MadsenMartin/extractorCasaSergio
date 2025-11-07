@@ -51,17 +51,20 @@ def extraer_pdf(pdf_file):
     INSTRUCCIONES:
     1. Mira las imágenes Y el texto para identificar TODOS los items de TODAS las páginas
     2. Extrae TODOS los items de la tabla (filas con Código, Artículo, IVA, Pre. Uni., Cantidad, Total)
-    3. Busca al final:
-       - "SubTotal:" = suma de todos los totales
-       - "Iva:" = IVA total
-       - "Total:" = total final
+    3. IMPORTANTE: Si la columna Código está VACÍA, deja "codigo" como string vacío (""). NO pongas el artículo en el campo código.
+    4. Busca al final del documento, debajo de la tabla:
+        - "Unidades:" = suma de todas las cantidades
+        - "SubTotal:" = suma de todos los totales
+        - "Iva:" = IVA total
+        - "Total:" = total final
 
     Devuelve JSON:
     {{
     "pedido_numero": string,
     "items": [
-        {{"codigo": string, "descripcion": string, "cantidad": float, "precio_unit": float, "total": float, "iva": float}}
+        {{"codigo": string, "articulo": string, "iva": float, "pre_uni": float, "cantidad": float, "total": float}}
     ],
+    "unidades": float,
     "subtotal": float,
     "iva_total": float,
     "total": float
@@ -101,8 +104,21 @@ def extraer_pdf(pdf_file):
         validacion = f"ERROR: Suma={suma_totales} != Subtotal={subtotal}"
         validacion_ok = False
     else:
-        validacion = "OK"
+        validacion = "OK Totales"
         validacion_ok = True
+
+    # Verificar que la suma de cantidades = unidades
+    suma_cantidades = sum(item["cantidad"] for item in data["items"])
+    unidades = data["unidades"]
+
+    if abs(suma_cantidades - unidades) > 0.01:
+        validacion += f"; ERROR: Suma Cantidades={suma_cantidades} != Unidades={unidades}"
+        validacion_ok = False
+    else:
+        if validacion_ok:
+            validacion += "; OK Cantidades"
+        else:
+            validacion += "; OK Cantidades"
 
     # Función para formatear números con coma decimal
     def format_number(num):
@@ -113,16 +129,16 @@ def extraer_pdf(pdf_file):
     # Generar CSV en memoria
     output = io.StringIO()
     writer = csv.writer(output, delimiter=';')
-    writer.writerow(["Codigo", "Descripcion", "Cantidad", "Precio_Unit", "Total", "IVA", "Validacion"])
+    writer.writerow(["Codigo", "Artículo", "Cantidad", "Precio Unitario", "IVA", "Total (neto)", "Validacion"])
     for i, item in enumerate(data["items"]):
         val = validacion if i == 0 else ""
         writer.writerow([
             item["codigo"],
-            item["descripcion"],
+            item["articulo"],
             format_number(item["cantidad"]),
-            format_number(item["precio_unit"]),
-            format_number(item["total"]),
+            format_number(item["pre_uni"]),
             format_number(item["iva"]),
+            format_number(item["total"]),
             val
         ])
 
