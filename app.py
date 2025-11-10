@@ -2,7 +2,7 @@ import streamlit as st
 import fitz  # PyMuPDF
 import base64
 from openai import OpenAI
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
 import json
 import re
@@ -39,7 +39,7 @@ def extraer_pdf(pdf_file):
     # Cerrar el documento antes de intentar eliminar el archivo
     doc.close()
 
-    load_dotenv()
+#    load_dotenv()
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     prompt = f"""TAREA CRÍTICA: Extrae datos de un pedido PDF con validación matemática obligatoria.
@@ -175,7 +175,7 @@ REGLAS NO NEGOCIABLES:
 st.set_page_config(page_title="Extractor de pedidos Casa Sergio", page_icon="📄")
 
 # Autenticación
-load_dotenv()
+#load_dotenv()
 PASSWORD = os.getenv("APP_PASSWORD", "admin123")  # Contraseña por defecto si no está en .env
 
 if "authenticated" not in st.session_state:

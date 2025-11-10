@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_casa_sergio
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./imagenes:/app/imagenes
+      - streamlit_cache:/app/.streamlit
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  streamlit_cache:

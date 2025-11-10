@@ -1,0 +1,11 @@
+[client]
+showErrorDetails = true
+showWarningOnDirectExecution = false
+
+[logger]
+level = "info"
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = true
