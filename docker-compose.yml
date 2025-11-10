@@ -7,8 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: app_casa_sergio
     restart: always
-    env_file:
-      - .env
+    environment:
+      OPENAI_API_KEY: ""
+      APP_PASSWORD: "abcdefghijklmnopqrstuvwxyz123456789048"
     ports:
       - "8501:8501"
     volumes:
