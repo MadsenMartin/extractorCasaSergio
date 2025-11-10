@@ -94,11 +94,6 @@ Responde SOLO JSON."""
 
     content = response.choices[0].message.content
 
-    '''# Guardar respuesta raw para debugging
-    with open("response_raw.json", "w", encoding="utf-8") as f:
-        f.write(content)
-    '''
-
     # Extraer JSON si está envuelto en markdown
     json_match = re.search(r'```(?:json)?\s*(\{.*\})\s*```', content, re.DOTALL)
     if json_match:
@@ -108,11 +103,6 @@ Responde SOLO JSON."""
 
     data = json.loads(json_str)
 
-    '''# Guardar respuesta parseada para debugging
-    with open("response_parsed.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(data, indent=2, ensure_ascii=False))
-    '''
-    
     # VALIDACIONES EN PYTHON (no confiar en GPT)
     items = data["items"]
     totales_doc = data["totales_documento"]
