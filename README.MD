@@ -9,7 +9,7 @@ Su finalidad es el control de lo pedido vs lo que cargan ellos en el sistema (Lo
 
 1. Cloná este repositorio en tu servidor.
 2. Navegá al directorio del proyecto.
-3. Asegurate de tener Docker y Docker Compose instalados.
+3. Asegurate de tener Docker y Docker Compose instalados. [Guía instalación Docker Compose](https://docs.docker.com/compose/install/linux/)
 4. Editá el archivo `docker-compose.yml` para incluir tus variables de entorno (clave de API de OpenAI y contraseña de la aplicación)
 5. Corré el container con `docker-compose up --build`
 6. Accedé a la aplicación en tu navegador web en `http://localhost:8501`.
